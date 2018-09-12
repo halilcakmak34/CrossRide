@@ -4,6 +4,7 @@
 package com.crossover.techtrial.controller;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
@@ -59,6 +60,15 @@ public class PersonControllerTest {
 				"/api/person/"+personId, Person.class);
 		Assert.assertEquals("oguz yildiz", response.getBody().getName());
 		Assert.assertEquals("oguzyildiz@gmail.com", response.getBody().getEmail());
+		Assert.assertEquals(200, response.getStatusCode().value());
+	}
+  
+  @Test
+  public void testGetPersonAll() throws Exception {
+		ResponseEntity<Person[]> response = template.getForEntity(
+				"/api/person/", Person[].class);
+		Assert.assertEquals("oguz yildiz", response.getBody()[0].getName());
+		Assert.assertEquals("oguzyildiz@gmail.com", response.getBody()[0].getEmail());
 		Assert.assertEquals(200, response.getStatusCode().value());
 	}
   

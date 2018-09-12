@@ -11,14 +11,8 @@ public class DateUtil {
 		return LocalDateTime.parse(strDate, formatter);
 	}
 	
-	public static void main(String[] args) {
-		LocalDateTime one = getDateLocalTime("2018-01-11T01:00:00"),two=getDateLocalTime("2018-01-11T01:00:01");
-		
-		if(one.compareTo(two)<0) {
-			System.out.println("One büyük");
-		}
-		else {
-			System.out.println("Two büyük");
-		}
+	public static String getStrFromLocalDateTime(LocalDateTime localDateTime) {
+		return formatter.format(localDateTime);
 	}
+	
 }

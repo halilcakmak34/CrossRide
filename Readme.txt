@@ -8,7 +8,7 @@ Notes:
     - Cross-Ride should only accept the data from registered drivers and riders only. 
     - The driver is not allowed to add a ride with end time less than or equal to start time.
     - The driver can enter shared rides with overlapping entries. Like 1 shared ride from 2018-08-24 09:00 to 2018-08-24 10:00
-     and another ride with start time 2018-08-24 09:30 to 2018-08-24 10:10.--> iki müşteri alınırsa iki tane entre almış oluruz.
+     and another ride with start time 2018-08-24 09:30 to 2018-08-24 10:10.
     - Frontend application is out of our scope. It is a separate, fully-functioning application handled by another team, 
     so we do not want to modify it.
     

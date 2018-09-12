@@ -28,6 +28,7 @@ import com.crossover.techtrial.model.Person;
 import com.crossover.techtrial.model.Ride;
 import com.crossover.techtrial.repositories.PersonRepository;
 import com.crossover.techtrial.repositories.RideRepository;
+import com.crossover.techtrial.repositories.TopRideRepository;
 import com.crossover.techtrial.util.DateUtil;
 
 /**
@@ -51,6 +52,9 @@ public class RideControllerTest {
 
 	@Autowired
 	PersonRepository personRepository;
+	
+	@Autowired
+	TopRideRepository topRideRepository;
 
 	@Before
 	public void setup() throws Exception {

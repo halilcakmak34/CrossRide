@@ -17,7 +17,10 @@ import org.springframework.stereotype.Service;
 
 import com.crossover.techtrial.dto.TopDriverDTO;
 import com.crossover.techtrial.model.Ride;
+import com.crossover.techtrial.model.TopRide;
+import com.crossover.techtrial.repositories.PropertyAppRepository;
 import com.crossover.techtrial.repositories.RideRepository;
+import com.crossover.techtrial.repositories.TopRideRepository;
 import com.crossover.techtrial.util.DateUtil;
 
 /**
@@ -29,6 +32,12 @@ public class RideServiceImpl implements RideService {
 
 	@Autowired
 	RideRepository rideRepository;
+	
+	@Autowired
+	TopRideRepository topRideRepository;
+	
+	@Autowired
+	PropertyAppRepository propertyAppRepository;
 
 	public Ride save(Ride ride) {
 		return rideRepository.save(ride);
@@ -94,6 +103,10 @@ public class RideServiceImpl implements RideService {
 		for(Long driver : driverMap.keySet()) {
 			int totalRideCount = rideRepository.totalRideByDriver(driver);
 			driverMap.get(driver).setAverageDistance(driverMap.get(driver).getAverageDistance()/totalRideCount);
+			TopRide topRide = new TopRide();
+			topRide.setRideCount(totalRideCount);
+			topRide.setAverageDistance(driverMap.get(driver).getAverageDistance());
+			topRideRepository.
 		}
 
 		List<TopDriverDTO> result = new ArrayList<>(driverMap.values());
