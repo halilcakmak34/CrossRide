@@ -33,8 +33,8 @@ public class TopRide implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
-	
-	@Column(name="ride_count")
+
+	@Column(name = "ride_count")
 	Integer rideCount;
 
 	@OneToOne
@@ -42,15 +42,13 @@ public class TopRide implements Serializable {
 	Person person;
 
 	@Column(name = "max_ride_duration")
-	Double maxRideDuration;
+	Long maxRideDuration;
 
 	@Column(name = "total_ride_duration")
-	Double totalRideDuration;
+	Long totalRideDuration;
 
 	@Column(name = "average_distance")
 	Double averageDistance;
-
-	
 
 	public Long getId() {
 		return id;
@@ -68,28 +66,6 @@ public class TopRide implements Serializable {
 		this.person = person;
 	}
 
-	public Double getMaxRideDuration() {
-		return maxRideDuration;
-	}
-
-	public void setMaxRideDuration(Double maxRideDuration) {
-		this.maxRideDuration = maxRideDuration;
-	}
-
-	public Double getTotalRideDuration() {
-		return totalRideDuration;
-	}
-
-	public void setTotalRideDuration(Double totalRideDuration) {
-		this.totalRideDuration = totalRideDuration;
-	}
-
-	public void setAverageDistance(Double averageDistance) {
-		this.averageDistance = averageDistance;
-	}
-
-	
-
 	public Integer getRideCount() {
 		return rideCount;
 	}
@@ -98,14 +74,30 @@ public class TopRide implements Serializable {
 		this.rideCount = rideCount;
 	}
 
+	public Long getTotalRideDuration() {
+		return totalRideDuration;
+	}
+
+	public void setTotalRideDuration(Long totalRideDuration) {
+		this.totalRideDuration = totalRideDuration;
+	}
+
+	public Double getAverageDistance() {
+		return averageDistance;
+	}
+
+	public void setAverageDistance(Double averageDistance) {
+		this.averageDistance = averageDistance;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((totalRideDuration == null) ? 0 : totalRideDuration.hashCode());
-		result = prime * result + ((maxRideDuration == null) ? 0 : maxRideDuration.hashCode());
+		result = prime * result + ((getTotalRideDuration() == null) ? 0 : getTotalRideDuration().hashCode());
+		result = prime * result + ((getMaxRideDuration() == null) ? 0 : getMaxRideDuration().hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((averageDistance == null) ? 0 : averageDistance.hashCode());
+		result = prime * result + ((getAverageDistance() == null) ? 0 : getAverageDistance().hashCode());
 		result = prime * result + ((person == null) ? 0 : person.hashCode());
 		result = prime * result + ((rideCount == null) ? 0 : rideCount.hashCode());
 		return result;
@@ -120,25 +112,25 @@ public class TopRide implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		TopRide other = (TopRide) obj;
-		if (totalRideDuration == null) {
-			if (other.totalRideDuration != null)
+		if (getTotalRideDuration() == null) {
+			if (other.getTotalRideDuration() != null)
 				return false;
-		} else if (!totalRideDuration.equals(other.totalRideDuration))
+		} else if (!getTotalRideDuration().equals(other.getTotalRideDuration()))
 			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (maxRideDuration == null) {
-			if (other.maxRideDuration != null)
+		if (getMaxRideDuration() == null) {
+			if (other.getMaxRideDuration() != null)
 				return false;
-		} else if (!maxRideDuration.equals(other.maxRideDuration))
+		} else if (!getMaxRideDuration().equals(other.getMaxRideDuration()))
 			return false;
-		if (averageDistance == null) {
-			if (other.averageDistance != null)
+		if (getAverageDistance() == null) {
+			if (other.getAverageDistance() != null)
 				return false;
-		} else if (!averageDistance.equals(other.averageDistance))
+		} else if (!getAverageDistance().equals(other.getAverageDistance()))
 			return false;
 		if (person == null) {
 			if (other.person != null)
@@ -155,8 +147,16 @@ public class TopRide implements Serializable {
 
 	@Override
 	public String toString() {
-		return "TopRide [id=" + id + ", Person =" + person + ", totalRideDuration=" + totalRideDuration
-				+ ", maxRideDuration=" + maxRideDuration + ", averageDistance=" + averageDistance + "]";
+		return "TopRide [id=" + id + ", Person =" + person + ", totalRideDuration=" + getTotalRideDuration()
+				+ ", maxRideDuration=" + getMaxRideDuration() + ", averageDistance=" + getAverageDistance() + "]";
+	}
+
+	public Long getMaxRideDuration() {
+		return maxRideDuration;
+	}
+
+	public void setMaxRideDuration(Long maxRideDuration) {
+		this.maxRideDuration = maxRideDuration;
 	}
 
 }

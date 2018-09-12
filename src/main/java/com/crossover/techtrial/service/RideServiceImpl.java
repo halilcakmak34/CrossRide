@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -32,10 +33,10 @@ public class RideServiceImpl implements RideService {
 
 	@Autowired
 	RideRepository rideRepository;
-	
+
 	@Autowired
 	TopRideRepository topRideRepository;
-	
+
 	@Autowired
 	PropertyAppRepository propertyAppRepository;
 
@@ -53,12 +54,30 @@ public class RideServiceImpl implements RideService {
 
 	@Override
 	public List<TopDriverDTO> getTopDriver(Long max, LocalDateTime startTimeFilter, LocalDateTime endTimeFilter) {
+		
+		/*
+		 * Select r.driver,SUM(r. FROM Ride r Where r. Group By r.driver
+		 * 
+		 * 
+		 */
+		
+		
+		Map<Long, TopRide> topRideMap = new HashMap<>();
+		List<TopRide> allList = (List<TopRide>) topRideRepository.findAll();
+		for (TopRide topRide : allList) {
+			topRideMap.put(topRide.getPerson().getId(), topRide);
+		}
 
-		List<Ride> allRide = (List<Ride>) rideRepository.findAll();
+		String latestCalculateDate = propertyAppRepository.findByKey("TOP_LATEST_CALCULATE_DATE");
+		List<Ride> allRide;
+		if (latestCalculateDate != null) {
+			allRide = (List<Ride>) rideRepository.findByStartTime(latestCalculateDate);
+		} else {
+			allRide = (List<Ride>) rideRepository.findAll();
+		}
+
 		LocalDateTime startTime = null, endTime = null, rideStart, rideEnd;
 		Duration time = null;
-
-		Map<Long, TopDriverDTO> driverMap = new HashMap<Long, TopDriverDTO>();
 
 		for (int i = 0; i < allRide.size(); i++) {
 
@@ -70,58 +89,58 @@ public class RideServiceImpl implements RideService {
 
 			Long driverId = allRide.get(i).getDriver().getId();
 
-			TopDriverDTO topDriverDto = driverMap.get(driverId);
-			if (topDriverDto != null) {
-				topDriverDto.setName(allRide.get(i).getDriver().getName());
-				topDriverDto.setEmail(allRide.get(i).getDriver().getEmail());
-				topDriverDto.setAverageDistance(topDriverDto.getAverageDistance() + allRide.get(i).getDistance().doubleValue());
+			TopRide topRide = topRideMap.get(driverId);
+			if (topRide != null) {
+				topRide.setAverageDistance(topRide.getAverageDistance() + allRide.get(i).getDistance().doubleValue());
 				startTime = DateUtil.getDateLocalTime(allRide.get(i).getStartTime());
 				endTime = DateUtil.getDateLocalTime(allRide.get(i).getEndTime());
 				time = Duration.between(startTime, endTime);
-				if (topDriverDto.getMaxRideDurationInSecods() < time.getSeconds()) {
-					topDriverDto.setMaxRideDurationInSecods(time.getSeconds());
+				if (topRide.getMaxRideDuration() < time.getSeconds()) {
+					topRide.setMaxRideDuration(time.getSeconds());
 				}
-				topDriverDto.setTotalRideDurationInSeconds(
-						topDriverDto.getTotalRideDurationInSeconds() + time.getSeconds());
-				driverMap.put(driverId, topDriverDto);
+				topRide.setTotalRideDuration(topRide.getTotalRideDuration() + time.getSeconds());
+
 			} else {
 				startTime = DateUtil.getDateLocalTime(allRide.get(i).getStartTime());
 				endTime = DateUtil.getDateLocalTime(allRide.get(i).getEndTime());
 				time = Duration.between(startTime, endTime);
-				topDriverDto = new TopDriverDTO();
-				topDriverDto.setName(allRide.get(i).getDriver().getName());
-				topDriverDto.setEmail(allRide.get(i).getDriver().getEmail());
-				topDriverDto.setAverageDistance(allRide.get(i).getDistance().doubleValue());
-				topDriverDto.setMaxRideDurationInSecods(time.getSeconds());
-				topDriverDto.setTotalRideDurationInSeconds(time.getSeconds());
-				driverMap.put(driverId, topDriverDto);
+				topRide = new TopRide();
+				topRide.setPerson(allRide.get(i).getDriver());
+				topRide.setAverageDistance(allRide.get(i).getDistance().doubleValue());
+				topRide.setTotalRideDuration(time.getSeconds());
+				topRide.setMaxRideDuration(time.getSeconds());
 			}
+			topRideMap.put(driverId, topRide);
+			topRideRepository.save(topRide);
 
 		}
-		
-		
-		for(Long driver : driverMap.keySet()) {
-			int totalRideCount = rideRepository.totalRideByDriver(driver);
-			driverMap.get(driver).setAverageDistance(driverMap.get(driver).getAverageDistance()/totalRideCount);
-			TopRide topRide = new TopRide();
-			topRide.setRideCount(totalRideCount);
-			topRide.setAverageDistance(driverMap.get(driver).getAverageDistance());
-			topRideRepository.
-		}
 
-		List<TopDriverDTO> result = new ArrayList<>(driverMap.values());
+		List<TopRide> topRideList = new ArrayList<>(topRideMap.values());
 
-		for (int i = 0; i < result.size(); i++) {
-			for (int j = 1; j < result.size(); j++) {
+		for (int i = 0; i < topRideList.size(); i++) {
+			for (int j = 1; j < topRideList.size(); j++) {
 
-				if (result.get(i).getTotalRideDurationInSeconds() < result.get(j).getTotalRideDurationInSeconds()) {
-					TopDriverDTO tmp = result.get(i);
-					result.set(i, result.get(j));
-					result.set(j, tmp);
+				if (topRideList.get(i).getTotalRideDuration() < topRideList.get(j).getTotalRideDuration()) {
+					TopRide tmp = topRideList.get(i);
+					topRideList.set(i, topRideList.get(j));
+					topRideList.set(j, tmp);
 				}
 			}
 		}
-		return result.subList(0, max.intValue());
+
+		List<TopDriverDTO> result = new LinkedList<TopDriverDTO>();
+
+		for (int i = 0; i < max.intValue(); i++) {
+			TopDriverDTO topDriverDto = new TopDriverDTO();
+			topDriverDto.setName(topRideList.get(i).getPerson().getName());
+			topDriverDto.setEmail(topRideList.get(i).getPerson().getEmail());
+			topDriverDto.setAverageDistance(topRideList.get(i).getAverageDistance());
+			topDriverDto.setMaxRideDurationInSecods(topRideList.get(i).getMaxRideDuration());
+			topDriverDto.setTotalRideDurationInSeconds(topRideList.get(i).getTotalRideDuration());
+			result.add(topDriverDto);
+		}
+
+		return result;
 	}
 
 }
