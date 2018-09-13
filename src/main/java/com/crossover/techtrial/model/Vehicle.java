@@ -22,7 +22,12 @@ import javax.persistence.Table;
 @Table(name = "vehicle")
 public class Vehicle implements Serializable {
 
-	private static final long serialVersionUID = 224140553229345515L;
+	
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5329833259690430628L;
 
 	public Vehicle() {
 	}

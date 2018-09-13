@@ -3,13 +3,20 @@
  */
 package com.crossover.techtrial.dto;
 
+import java.io.Serializable;
+
 /**
  * @author crossover
  *
  */
-public class TopDriverDTO {
+public class TopDriverDTO implements Serializable {
   
   /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+/**
    * Constructor for TopDriverDTO
    * @param name
    * @param email
@@ -27,7 +34,6 @@ public class TopDriverDTO {
     this.setAverageDistance(averageDistance);
     this.setMaxRideDurationInSecods(maxRideDurationInSecods);
     this.setTotalRideDurationInSeconds(totalRideDurationInSeconds);
-    
   }
   
   public TopDriverDTO() {

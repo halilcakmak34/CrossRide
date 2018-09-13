@@ -18,7 +18,6 @@ import javax.validation.constraints.NotNull;
 @Table(name = "property_app")
 public class PropertyApp implements Serializable {
 
-
 	/**
 	 * 
 	 */
@@ -31,11 +30,11 @@ public class PropertyApp implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 
-	@NotNull
-	@Column(name = "key")
+	
+	@Column(name = "p_key")
 	String key;
 
-	@Column(name = "value")
+	@Column(name = "p_value")
 	String value;
 
 	public Long getId() {

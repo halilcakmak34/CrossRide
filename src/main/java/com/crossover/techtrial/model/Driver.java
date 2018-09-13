@@ -41,11 +41,12 @@ public Driver() {}
   @JoinColumn(name = "person_id", referencedColumnName = "id")
   Person person;
   
-  @ManyToOne
+  @OneToOne
   @JoinColumn(name = "vehicle_id", referencedColumnName = "id")
   Vehicle vehicle;
   
-  @Column(name="tax_id")
+  @OneToOne
+  @JoinColumn(name = "tax_id", referencedColumnName = "id")
   Tax taxInfo;
   
   public Long getId() {

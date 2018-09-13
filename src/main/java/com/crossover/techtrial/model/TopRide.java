@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -22,10 +23,11 @@ import javax.persistence.Table;
 @Table(name = "top_ride")
 public class TopRide implements Serializable {
 
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 2794458655374299462L;
+	private static final long serialVersionUID = -6552254944277097279L;
 
 	public TopRide() {
 	}

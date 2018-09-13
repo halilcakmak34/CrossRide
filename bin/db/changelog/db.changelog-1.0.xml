@@ -24,6 +24,7 @@
 			<column name="end_time" type="VARCHAR(255)" />
 			<column name="distance" type="BIGINT" />
 		</createTable>
+
 		<addForeignKeyConstraint
 			baseColumnNames="driver_id" baseTableName="ride"
 			constraintName="fk_address_person_driver" onDelete="CASCADE"
@@ -34,5 +35,112 @@
 			constraintName="fk_address_person_rider" onDelete="CASCADE"
 			onUpdate="RESTRICT" referencedColumnNames="id"
 			referencedTableName="person" />
+		<createTable tableName="top_ride">
+			<column autoIncrement="true" name="id" type="BIGINT">
+				<constraints primaryKey="true"
+					primaryKeyName="pk_top_ride" />
+			</column>
+			<column name="person_id" type="BIGINT" />
+			<column name="ride_count" type="BIGINT" />
+			<column name="max_ride_duration" type="BIGINT" />
+			<column name="total_ride_duration" type="BIGINT" />
+			<column name="average_distance" type="BIGINT" />
+		</createTable>
+		<addForeignKeyConstraint
+			baseColumnNames="person_id" baseTableName="top_ride"
+			constraintName="fk_address_person_top_rider" onDelete="CASCADE"
+			onUpdate="RESTRICT" referencedColumnNames="id"
+			referencedTableName="person" />
+		<createTable tableName="property_app">
+			<column autoIncrement="true" name="id" type="BIGINT">
+				<constraints primaryKey="true"
+					primaryKeyName="pk_property_app" />
+			</column>
+			<column name="p_key" type="VARCHAR(255)" />
+			<column name="p_value" type="VARCHAR(255)" />
+		</createTable>
+		<createTable tableName="vehicle_type">
+			<column autoIncrement="true" name="id" type="BIGINT">
+				<constraints primaryKey="true"
+					primaryKeyName="pk_vehicle_type" />
+			</column>
+			<column name="vehicle_type" type="VARCHAR(255)" />
+		</createTable>
+		<createTable tableName="vehicle">
+			<column autoIncrement="true" name="id" type="BIGINT">
+				<constraints primaryKey="true"
+					primaryKeyName="pk_vehicle" />
+			</column>
+			<column name="owner_id" type="BIGINT" />
+			<column name="vehicle_type_id" type="BIGINT" />
+		</createTable>
+		<addForeignKeyConstraint
+			baseColumnNames="vehicle_type_id" baseTableName="vehicle"
+			constraintName="fk_address_vehicle_type_vehicle" onDelete="CASCADE"
+			onUpdate="RESTRICT" referencedColumnNames="id"
+			referencedTableName="vehicle_type" />
+		<createTable tableName="driver">
+			<column autoIncrement="true" name="id" type="BIGINT">
+				<constraints primaryKey="true"
+					primaryKeyName="pk_driver" />
+			</column>
+			<column name="person_id" type="BIGINT" />
+			<column name="vehicle_id" type="BIGINT" />
+			<column name="tax_id" type="BIGINT" />
+			<column name="total_ride_duration" type="BIGINT" />
+			<column name="average_distance" type="BIGINT" />
+		</createTable>
+		<createTable tableName="tax">
+			<column autoIncrement="true" name="id" type="BIGINT">
+				<constraints primaryKey="true" primaryKeyName="pk_tax" />
+			</column>
+			<column name="amenable_id" type="BIGINT" />
+			<column name="vehicle_id" type="BIGINT" />
+		</createTable>
+		<addForeignKeyConstraint
+			baseColumnNames="amenable_id" baseTableName="tax"
+			constraintName="fk_address_driver_tax" onDelete="CASCADE"
+			onUpdate="RESTRICT" referencedColumnNames="id"
+			referencedTableName="driver" />
+		<addForeignKeyConstraint
+			baseColumnNames="vehicle_id" baseTableName="tax"
+			constraintName="fk_address_vehicle_tax" onDelete="CASCADE"
+			onUpdate="RESTRICT" referencedColumnNames="id"
+			referencedTableName="vehicle" />
+		<addForeignKeyConstraint
+			baseColumnNames="person_id" baseTableName="driver"
+			constraintName="fk_address_person_driver_one" onDelete="CASCADE"
+			onUpdate="RESTRICT" referencedColumnNames="id"
+			referencedTableName="person" />
+		<addForeignKeyConstraint
+			baseColumnNames="vehicle_id" baseTableName="driver"
+			constraintName="fk_address_vehicle_driver" onDelete="CASCADE"
+			onUpdate="RESTRICT" referencedColumnNames="id"
+			referencedTableName="vehicle" />
+		<addForeignKeyConstraint
+			baseColumnNames="tax_id" baseTableName="driver"
+			constraintName="fk_address_tax_driver" onDelete="CASCADE"
+			onUpdate="RESTRICT" referencedColumnNames="id"
+			referencedTableName="tax" />
+		
+		<addForeignKeyConstraint
+			baseColumnNames="owner_id" baseTableName="vehicle"
+			constraintName="fk_address_driver_vehicle" onDelete="CASCADE"
+			onUpdate="RESTRICT" referencedColumnNames="id"
+			referencedTableName="driver" />
+
+		<createTable tableName="rider">
+			<column autoIncrement="true" name="id" type="BIGINT">
+				<constraints primaryKey="true"
+					primaryKeyName="pk_rider_aaa" />
+			</column>
+			<column name="person_id" type="BIGINT" />
+		</createTable>
+		<addForeignKeyConstraint
+			baseColumnNames="person_id" baseTableName="rider"
+			constraintName="fk_address_person_rider_aaa" onDelete="CASCADE"
+			onUpdate="RESTRICT" referencedColumnNames="id"
+			referencedTableName="person" />
+
 	</changeSet>
 </databaseChangeLog>

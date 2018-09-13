@@ -22,6 +22,8 @@ public interface RideService {
   public Ride findById(Long rideId);
 
   public List<TopDriverDTO> getTopDriver(Long max,LocalDateTime startTimeFilter,LocalDateTime endTimeFilter);
+
+  public List<TopDriverDTO> getTopDriverWithSQL(Long max, LocalDateTime startTimeFilter, LocalDateTime endTimeFilter);
   
 
 }

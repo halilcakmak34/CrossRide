@@ -99,5 +99,23 @@ public class RideController {
 		return ResponseEntity.ok(topDrivers);
 
 	}
+	
+	@GetMapping(path = "/api/top-rides2")
+	@ResponseBody
+	public ResponseEntity<List<TopDriverDTO>> getTopDriverWithSQL(@RequestParam(value = "max", defaultValue = "5") Long count,
+			@RequestParam(value = "startTime", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startTime,
+			@RequestParam(value = "endTime", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime endTime) {
+
+		if(startTime.compareTo(endTime)>0) {
+			throw new IllegalArgumentException("EndTime cannot be earlier than startTime.");
+		}
+		
+		List<TopDriverDTO> topDrivers = new ArrayList<TopDriverDTO>();
+
+		topDrivers.addAll(rideService.getTopDriverWithSQL(count, startTime, endTime));
+
+		return ResponseEntity.ok(topDrivers);
+
+	}
 
 }
