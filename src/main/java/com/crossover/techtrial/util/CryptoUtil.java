@@ -22,9 +22,5 @@ public class CryptoUtil {
 		return encryptor.decrypt(text);
 	}
 	
-	
-	public static void main(String[] args) {
-		System.out.println(encrypto("jasyptPassword"));
-	}
 
 }

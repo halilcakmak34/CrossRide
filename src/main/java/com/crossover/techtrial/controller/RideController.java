@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.crossover.techtrial.config.Constants;
 import com.crossover.techtrial.dto.TopDriverDTO;
+import com.crossover.techtrial.exceptions.EndTimeEarlierException;
 import com.crossover.techtrial.model.Person;
 import com.crossover.techtrial.model.Ride;
 import com.crossover.techtrial.service.PersonService;
@@ -81,12 +83,13 @@ public class RideController {
 	 * DONT CHANGE METHOD SIGNATURE AND RETURN TYPES
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
 	@GetMapping(path = "/api/top-rides")
 	@ResponseBody
 	public ResponseEntity<List<TopDriverDTO>> getTopDriver(@RequestParam(value = "max", defaultValue = "5") Long count,
-			@RequestParam(value = "startTime", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startTime,
-			@RequestParam(value = "endTime", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime endTime) {
+			@RequestParam(value = "startTime", required = true) @DateTimeFormat(pattern = Constants.DATE_LONG_FORMAT) LocalDateTime startTime,
+			@RequestParam(value = "endTime", required = true) @DateTimeFormat(pattern = Constants.DATE_LONG_FORMAT) LocalDateTime endTime) {
 
 		if(startTime.compareTo(endTime)>0) {
 			throw new IllegalArgumentException("EndTime cannot be earlier than startTime.");
@@ -103,11 +106,11 @@ public class RideController {
 	@GetMapping(path = "/api/top-rides2")
 	@ResponseBody
 	public ResponseEntity<List<TopDriverDTO>> getTopDriverWithSQL(@RequestParam(value = "max", defaultValue = "5") Long count,
-			@RequestParam(value = "startTime", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startTime,
-			@RequestParam(value = "endTime", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime endTime) {
+			@RequestParam(value = "startTime", required = true) @DateTimeFormat(pattern = Constants.DATE_LONG_FORMAT) LocalDateTime startTime,
+			@RequestParam(value = "endTime", required = true) @DateTimeFormat(pattern = Constants.DATE_LONG_FORMAT) LocalDateTime endTime) throws EndTimeEarlierException {
 
 		if(startTime.compareTo(endTime)>0) {
-			throw new IllegalArgumentException("EndTime cannot be earlier than startTime.");
+			throw new EndTimeEarlierException("EndTime cannot be earlier than startTime.");
 		}
 		
 		List<TopDriverDTO> topDrivers = new ArrayList<TopDriverDTO>();

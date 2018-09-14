@@ -16,10 +16,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.crossover.techtrial.config.Constants;
 import com.crossover.techtrial.dto.TopDriverDTO;
 import com.crossover.techtrial.model.PropertyApp;
 import com.crossover.techtrial.model.Ride;
-import com.crossover.techtrial.model.TopDTO;
+import com.crossover.techtrial.model.TopDriverModel;
 import com.crossover.techtrial.model.TopRide;
 import com.crossover.techtrial.repositories.PropertyAppRepository;
 import com.crossover.techtrial.repositories.RideRepository;
@@ -58,19 +59,14 @@ public class RideServiceImpl implements RideService {
 	@Override
 	public List<TopDriverDTO> getTopDriver(Long max, LocalDateTime startTimeFilter, LocalDateTime endTimeFilter) {
 
-		/*
-		 * Select r.driver,SUM(r. FROM Ride r Where r. Group By r.driver
-		 * 
-		 * 
-		 */
-
+		
 		Map<Long, TopRide> topRideMap = new HashMap<>();
 		List<TopRide> allTopList = (List<TopRide>) topRideRepository.findAll();
 		for (TopRide topRide : allTopList) {
 			topRideMap.put(topRide.getPerson().getId(), topRide);
 		}
 
-		PropertyApp latestCalculateDate = (PropertyApp) propertyAppRepository.findByKey("TOP_LATEST_CALCULATE_DATE");
+		PropertyApp latestCalculateDate = (PropertyApp) propertyAppRepository.findByKey(Constants.TOP_LATEST_CALCULATE_DATE);
 
 		List<Ride> allRide;
 		if (allTopList.size() != 0) {
@@ -124,18 +120,18 @@ public class RideServiceImpl implements RideService {
 
 		if (latestCalculateDate == null) {
 			latestCalculateDate = new PropertyApp();
-			latestCalculateDate.setKey("TOP_LATEST_CALCULATE_DATE");
-			latestCalculateDate.setValue(DateUtil.getStrFromLocalDateTime(LocalDateTime.now()));
+			latestCalculateDate.setKey(Constants.TOP_LATEST_CALCULATE_DATE);
+			latestCalculateDate.setValue(DateUtil.getStrFromLocalDateTime(endTimeFilter));
 			propertyAppRepository.save(latestCalculateDate);
 		} else {
-			latestCalculateDate.setValue(DateUtil.getStrFromLocalDateTime(LocalDateTime.now()));
+			latestCalculateDate.setValue(DateUtil.getStrFromLocalDateTime(endTimeFilter));
 		}
 
 		List<TopRide> topRideList = new ArrayList<>(topRideMap.values());
 
 		for (int i = 0; i < topRideList.size(); i++) {
-			for (int j = 1; j < topRideList.size(); j++) {
-				if (topRideList.get(i).getTotalRideDuration() < topRideList.get(j).getTotalRideDuration()) {
+			for (int j = i+1; j < topRideList.size(); j++) {
+				if (topRideList.get(i).getTotalRideDuration().compareTo(topRideList.get(j).getTotalRideDuration())<0) {
 					TopRide tmp = topRideList.get(i);
 					topRideList.set(i, topRideList.get(j));
 					topRideList.set(j, tmp);
@@ -161,10 +157,10 @@ public class RideServiceImpl implements RideService {
 	@Override
 	public List<TopDriverDTO> getTopDriverWithSQL(Long max, LocalDateTime startTimeFilter,
 			LocalDateTime endTimeFilter) {
-		List<TopDTO> tmp = rideRepository.findGetTopDriver(max, DateUtil.getStrFromLocalDateTime(startTimeFilter),
+		List<TopDriverModel> tmp = rideRepository.findGetTopDriver(max, DateUtil.getStrFromLocalDateTime(startTimeFilter),
 				DateUtil.getStrFromLocalDateTime(endTimeFilter));
 		List<TopDriverDTO> result = new ArrayList<>();
-		for (TopDTO t : tmp) {
+		for (TopDriverModel t : tmp) {
 			TopDriverDTO top = new TopDriverDTO();
 			top.setName(t.getName());
 			top.setEmail(t.getEmail());
